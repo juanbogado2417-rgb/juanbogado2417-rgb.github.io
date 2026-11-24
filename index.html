@@ -1,0 +1,1896 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#142b45">
+<title>Contabilidad en casa · Acceso</title>
+<style>
+:root{--navy:#142b45;--blue:#2563eb;--bg:#f3f6fa;--muted:#64748b;--line:#e2e8f0;--green:#15803d;--red:#b91c1c;--amber:#92400e;--teal:#0d9488}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#172033}
+header{background:var(--navy);color:white;padding:17px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;transition:background .2s ease}
+.brand{font-size:20px;font-weight:800}.sub{font-size:12px;color:#cbd5e1}
+.top-quick-bar{background:#ffffff;border-bottom:1px solid var(--line);padding:10px 20px;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.bottom-quick-bar{max-width:1200px;margin:24px auto 0;padding:14px 16px;background:#ffffff;border:1px solid var(--line);border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+main{max-width:1200px;margin:20px auto;padding:0 15px 45px}
+button{border:0;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer;background:var(--blue);color:white;transition:background .2s ease,opacity .2s ease}button.secondary{background:#eaf0f8;color:var(--navy)}button.danger{background:#fee2e2;color:#991b1b}button.danger-solid{background:#dc2626;color:white}button:disabled{opacity:.5;cursor:not-allowed}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.tabs button{background:#e4eaf2;color:#334155}.tabs button.active{background:var(--navy);color:white}
+.toolbar,.panel,.metric{background:white;border:1px solid var(--line);border-radius:15px;padding:15px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:22px;margin:0 0 3px}h2{font-size:17px;margin:0 0 12px}.muted{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin:14px 0}
+@media(max-width:950px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+.metric small{color:var(--muted)}.metric strong{display:block;font-size:21px;margin-top:4px}.pos{color:var(--green)}.neg{color:var(--red)}.fund{color:var(--teal)}
+.layout{display:grid;grid-template-columns:1.2fr .8fr;gap:13px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select,textarea{font:inherit;border:1px solid #cbd5e1;border-radius:9px;padding:10px 14px;background:white;color:#172033;max-width:100%}
+input[type="checkbox"]{width:17px;height:17px;cursor:pointer;accent-color:var(--blue)}
+.filters input,.filters select{flex:1;min-width:140px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);vertical-align:middle}th{color:var(--muted)}.tablewrap{overflow:auto}
+.pill{display:inline-block;padding:3px 8px;border-radius:99px;background:#eef2ff;color:#3730a3;font-size:11px}.notice{padding:12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;margin:12px 0}
+.modal{display:none;position:fixed;inset:0;background:#0f172a88;align-items:center;justify-content:center;padding:14px;z-index:5}.modal.show{display:flex}.dialog{background:white;border-radius:17px;padding:19px;width:min(650px,100%);max-height:92vh;overflow:auto}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:12px;font-weight:700;color:#475569}.full{grid-column:1/-1}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;flex-wrap:wrap}
+.upload-dropzone{border:2px dashed var(--blue);border-radius:15px;padding:24px;text-align:center;background:#f8fbff;cursor:pointer;transition:all .2s}
+.upload-dropzone.dragover{background:#eef2ff;border-color:var(--navy)}
+.upload-dropzone input{display:none}
+.empty{text-align:center;color:var(--muted);padding:25px}.clientlist{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.client{border:1px solid var(--line);border-left-width:5px;border-radius:13px;padding:13px;background:white}
+#ocrStatus,#subClientExcelStatus{margin-top:10px;font-size:13px;font-weight:600;color:var(--navy);white-space:pre-wrap}#ocrRaw{width:100%;min-height:130px;font:12px ui-monospace,monospace}
+.toast{position:fixed;bottom:18px;right:18px;background:var(--navy);color:white;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 10px 25px #0f172a33;opacity:0;transform:translateY(10px);transition:all .2s ease;z-index:20;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.color-dot{width:12px;height:12px;border-radius:99px;display:inline-block;vertical-align:middle;border:1px solid #00000022}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:18px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}}@media(max-width:520px){.formgrid,.clientlist{grid-template-columns:1fr}.full{grid-column:auto}.metric{padding:11px}.metric strong{font-size:17px}header{padding:14px}}
+.bar-chart{display:flex;align-items:flex-end;gap:12px;height:190px;padding:20px 10px 6px;border-bottom:1px solid var(--line);overflow-x:auto}
+.bar-group{flex:1;min-width:54px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}
+.bar-fill{width:26px;min-height:2px;border-radius:5px 5px 0 0;transition:height .25s ease}
+.bar-value{font-size:10px;color:var(--muted);white-space:nowrap;text-align:center}
+.bar-label{font-size:11px;font-weight:700;color:#334155;white-space:nowrap}
+.chart-empty{padding:24px 8px;text-align:center;color:var(--muted);font-size:13px}
+.chart-panel h2{margin-bottom:4px}
+.month-charts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px}
+.mini-month-card{background:white;border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between}
+.mini-bars{display:flex;align-items:flex-end;justify-content:center;gap:24px;height:110px;padding:10px 0 4px;border-bottom:1px solid var(--line);margin:8px 0}
+.mini-bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.mini-bar-rect{width:34px;border-radius:6px 6px 0 0;min-height:3px}
+.months-12-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:14px 0}
+@media(max-width:850px){.months-12-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.months-12-grid{grid-template-columns:repeat(2,1fr)}}
+.month-tile{background:white;border:2px solid var(--line);border-radius:13px;padding:12px;cursor:pointer;transition:all .15s}
+.month-tile:hover{border-color:var(--blue);transform:translateY(-1px)}
+.month-tile.selected{border-color:var(--blue);background:#eff6ff}
+.month-tile-title{font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.month-tile-row{display:flex;justify-content:space-between;font-size:12px;margin-top:3px}
+.admin-only{display:none}
+body.is-admin .admin-only{display:initial}
+body.is-admin .top-quick-bar.admin-only,body.is-admin .bottom-quick-bar.admin-only{display:flex}
+body.is-admin .panel.admin-only{display:block}
+body.is-admin th.admin-only,body.is-admin td.admin-only{display:table-cell}
+.bulk-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:10px;background:#f8fafc;border-radius:10px;border:1px solid var(--line)}
+.gate-wrap{max-width:460px;margin:36px auto;background:white;border:1px solid var(--line);border-radius:16px;padding:22px}
+.gate-tabs{display:flex;gap:8px;margin-bottom:16px}
+.gate-tabs button{flex:1;background:#e4eaf2;color:#334155}
+.gate-tabs button.active{background:var(--navy);color:white}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+<header id="appHeader">
+  <div>
+    <div class="brand">Contabilidad en casa</div>
+    <div class="sub" id="headerSub">Portal de acceso</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span class="pill" id="userRoleBadge">🔒 Sin sesión</span>
+    <span class="pill" id="lastSyncBadge">Actualizado: recién</span>
+    <button class="secondary" id="changePinBtn" style="padding:6px 10px;font-size:12px;display:none">🔑 Cambiar PIN</button>
+    <button class="secondary" id="switchRoleBtn" style="padding:6px 10px;font-size:12px;display:none">Salir / Cambiar</button>
+  </div>
+</header>
+
+<div id="accessGate" class="gate-wrap">
+  <h2>Ingresar al portal</h2>
+  <div class="muted" style="margin-bottom:14px">Ingresá con tu CUIT/CUIL y PIN asignado.</div>
+  <div class="gate-tabs">
+    <button type="button" class="active" id="gateTabClient">Acceso Cliente</button>
+    <button type="button" id="gateTabAdmin">Administrador</button>
+  </div>
+
+  <form id="gateClientForm">
+    <div class="formgrid">
+      <div class="field full">
+        <label>CUIT / CUIL</label>
+        <input id="gateClientCuit" placeholder="Ej: 20-12345678-9 o 20123456789" required>
+      </div>
+      <div class="field full">
+        <label>PIN</label>
+        <input id="gateClientPin" type="password" placeholder="Ingresá tu PIN" required>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="submit" style="width:100%">Abrir mi cuenta</button>
+    </div>
+  </form>
+
+  <form id="gateAdminForm" style="display:none">
+    <div class="formgrid">
+      <div class="field full">
+        <label>PIN de Administrador</label>
+        <input id="gateAdminPin" type="password" placeholder="Ingresá PIN de administrador" required>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="submit" style="width:100%">Entrar como Administrador</button>
+    </div>
+  </form>
+</div>
+
+<div id="appShell" style="display:none">
+  <div class="top-quick-bar admin-only">
+    <button id="topNewClientBtn">+ Nuevo cliente</button>
+    <button class="secondary" id="topLoadInvoicesBtn">📄 Cargar facturas</button>
+    <button class="secondary" id="exportBundleHtmlBtn" style="background:#dcfce7;color:#166534">📦 Exportar Web con Datos</button>
+  </div>
+
+  <main>
+  <nav class="tabs">
+    <button class="active" data-tab="dashboard">Panel general</button>
+    <button data-tab="movementsTab">Movimientos</button>
+    <button data-tab="yearlyView">📅 Año y 12 Meses</button>
+    <button data-tab="clients" id="tabClientsBtn" class="admin-only">Clientes</button>
+    <button data-tab="subClientsTab">👥 Sub-clientes</button>
+    <button data-tab="scanner" class="admin-only">📄 Carga de Facturas y Excel</button>
+  </nav>
+
+  <section id="dashboard">
+  <div class="toolbar">
+    <div><h1 id="dashTitle">Panel financiero</h1><div class="muted" id="dashSub">Resumen general y gráficos.</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="secondary admin-only" id="export">Exportar CSV</button>
+    </div>
+  </div>
+  <div class="filters">
+    <select id="dashClient"><option value="">Todos los clientes</option></select>
+    <input id="dashMonth" type="month">
+    <select id="dashType">
+      <option value="">Todos los tipos</option>
+      <option>Ingreso</option>
+      <option>Egreso</option>
+      <option id="dashOptLeonel" value="Fondo Leonel">Fondo Leonel</option>
+    </select>
+    <input id="dashSearch" type="text" placeholder="Buscar concepto o importe...">
+    <button class="secondary" id="clearFilters">Limpiar</button>
+  </div>
+
+  <div class="grid">
+    <div class="metric"><small>Ingresos</small><strong class="pos" id="income">$0</strong></div>
+    <div class="metric"><small>Egresos</small><strong class="neg" id="expense">$0</strong></div>
+    <div class="metric" id="leonelMetricCard"><small>L.C. Leonel (+)</small><strong class="fund" id="leonelTotal">$0</strong></div>
+    <div class="metric"><small>Balance General</small><strong id="balance">$0</strong></div>
+    <div class="metric"><small>Movimientos</small><strong id="count">0</strong></div>
+  </div>
+
+  <div class="layout" style="margin-bottom:14px">
+   <div class="panel chart-panel">
+     <h2>Gráfico de barras · Ingresos por mes</h2>
+     <div class="muted">Evolución mensual de entradas e ingresos</div>
+     <div id="incomeChart"></div>
+   </div>
+   <div class="panel chart-panel">
+     <h2>Gráfico de barras · Egresos por mes</h2>
+     <div class="muted">Evolución mensual de salidas y gastos operativos</div>
+     <div id="expenseChart"></div>
+   </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div>
+        <h2>Gráficos individuales por mes</h2>
+        <div class="muted">Ingresos, Egresos y L.C. Leonel (+) (solo en cuenta de Oriana)</div>
+      </div>
+      <div style="display:flex;gap:12px;font-size:12px;font-weight:700">
+        <span style="color:#16a34a">■ Ingresos</span>
+        <span style="color:#dc2626">■ Egresos</span>
+        <span id="legendLeonel" style="color:#0d9488">■ L.C. Leonel (+)</span>
+      </div>
+    </div>
+    <div id="perMonthChartsContainer" class="month-charts-grid"></div>
+  </div>
+
+  <div class="panel admin-only">
+    <h2>Respaldo y publicación</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px">
+      <button class="secondary" id="exportBundleHtmlBtn2" style="background:#dcfce7;color:#166534">📦 Exportar index.html con Datos</button>
+      <button class="secondary" id="goScanner">📄 Ir a Carga de Facturas y Excel</button>
+      <button class="secondary" id="goSubClients" style="background:#ccfbf1;color:#115e59">👥 Ver Cartera de Sub-clientes</button>
+      <button class="secondary" id="backupJsonBtn">💾 Descargar Respaldo (.json)</button>
+      <button class="secondary" id="restoreJsonBtn">♻️ Restaurar Respaldo (.json)</button>
+      <input type="file" id="restoreJsonInput" accept=".json,application/json" style="display:none">
+    </div>
+  </div>
+  </section>
+
+  <section id="movementsTab" hidden>
+    <div class="toolbar">
+      <div><h1>Movimientos</h1><div class="muted">Consulta, carga, edición y eliminación de movimientos.</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="newMovement" class="admin-only">+ Movimiento</button>
+        <button class="secondary admin-only" id="exportMovesCsvBtn">Exportar CSV</button>
+      </div>
+    </div>
+    <div class="filters">
+      <select id="movesClientFilter"><option value="">Todos los clientes</option></select>
+      <input id="movesMonthFilter" type="month">
+      <select id="movesTypeFilter">
+        <option value="">Todos los tipos</option>
+        <option>Ingreso</option>
+        <option>Egreso</option>
+        <option id="movesOptLeonel" value="Fondo Leonel">Fondo Leonel</option>
+      </select>
+      <input id="movesSearchFilter" type="text" placeholder="Buscar concepto, categoría o importe...">
+      <button class="secondary" id="clearMovesFilters">Limpiar</button>
+    </div>
+    <div class="panel">
+      <div class="bulk-bar admin-only">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;cursor:pointer">
+          <input type="checkbox" id="selectAllMoves"> Seleccionar todos
+        </label>
+        <button class="danger" id="deleteSelectedMoves" style="padding:7px 11px;font-size:12px" disabled>Eliminar seleccionados (<span id="selectedCount">0</span>)</button>
+        <button class="danger-solid" id="deleteAllMoves" style="padding:7px 11px;font-size:12px;margin-left:auto">Eliminar TODO</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="admin-only" style="width:32px"></th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Categoría</th>
+              <th>Descripción</th>
+              <th>Importe</th>
+              <th>Origen</th>
+              <th class="admin-only" style="width:130px">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="allMovementRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="subClientsTab" hidden>
+    <div class="toolbar">
+      <div>
+        <h1>Sub-clientes por Cliente</h1>
+        <div class="muted">Cada cliente visualiza exclusivamente su propia cartera de sub-clientes.</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="secondary" id="exportSubClientsBtn">Exportar CSV</button>
+        <button class="admin-only" id="openNewSubClientModal">+ Sub-cliente</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:14px">
+      <div class="filters" style="margin-bottom:12px">
+        <div class="field" style="flex:1;min-width:240px">
+          <label>Cliente Seleccionado</label>
+          <select id="subClientOwnerSelect"></select>
+        </div>
+        <div class="field" style="flex:1;min-width:220px">
+          <label>Buscar en esta cartera</label>
+          <input type="text" id="subClientSearch" placeholder="Nombre o CUIL/CUIT...">
+        </div>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:0">
+        <div class="metric"><small>Sub-clientes de este Cliente</small><strong class="pos" id="subClientCountMetric">0</strong></div>
+        <div class="metric"><small>Cliente Propietario</small><strong style="font-size:17px;color:var(--navy)" id="subClientOwnerNameMetric">-</strong></div>
+        <div class="metric"><small>Total Cartera Global</small><strong style="font-size:17px;color:var(--muted)" id="subClientGlobalCountMetric">0</strong></div>
+      </div>
+    </div>
+    <div class="panel admin-only" style="margin-bottom:14px">
+      <h2 style="margin-bottom:6px">Carga automática de Sub-clientes (Excel / CSV)</h2>
+      <div class="muted" style="margin-bottom:10px">Detecta columnas de <b>Nombre</b> y <b>CUIL/CUIT</b> para el cliente seleccionado y omite duplicados.</div>
+      <div class="upload-dropzone" id="subClientDropZone" style="padding:16px">
+        <b>📁 Arrastrá o hacé clic para elegir el Excel de sub-clientes</b>
+        <input type="file" id="subClientExcelInput" accept=".xlsx,.xls,.csv">
+        <div id="subClientExcelStatus">Listo para importar cartera...</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h2 id="subClientTableTitle">Listado de Sub-clientes</h2>
+        <button class="danger admin-only" id="deleteAllSubClientsOfOwner" style="padding:6px 10px;font-size:12px">Vaciar cartera</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:45px">#</th>
+              <th>Nombre / Razón Social</th>
+              <th>CUIL / CUIT</th>
+              <th>Origen</th>
+              <th class="admin-only" style="width:130px">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="subClientRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="yearlyView" hidden>
+    <div class="toolbar">
+      <div>
+        <h1>Calendario por Año y 12 Meses</h1>
+        <div class="muted">Detalle mensual con L.C. Leonel aplicado exclusivamente a Oriana.</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label style="font-size:13px;font-weight:700">Año:</label>
+        <select id="yearSelector" style="min-width:110px;font-weight:700"></select>
+        <select id="yearClientFilter" style="min-width:180px"><option value="">Todos los clientes</option></select>
+      </div>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="metric"><small id="yrIncLabel">Ingresos Año</small><strong class="pos" id="yrIncome">$0</strong></div>
+      <div class="metric"><small id="yrExpLabel">Egresos Año</small><strong class="neg" id="yrExpense">$0</strong></div>
+      <div class="metric" id="yrFundCard"><small id="yrFundLabel">L.C. Leonel (+)</small><strong class="fund" id="yrFund">$0</strong></div>
+      <div class="metric"><small id="yrBalLabel">Balance Año</small><strong id="yrBalance">$0</strong></div>
+    </div>
+    <div class="months-12-grid" id="twelveMonthsGrid"></div>
+    <div class="panel" style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div>
+          <h2 id="selectedMonthTitle">Resumen del mes seleccionado</h2>
+          <div class="muted" id="selectedMonthSub">Hacé clic en cualquier mes para ver su resumen.</div>
+        </div>
+        <div id="selectedMonthChartMini" style="min-width:220px"></div>
+      </div>
+      <div class="muted">Para ver o editar el listado completo de movimientos, ingresá a la pestaña <b>Movimientos</b>.</div>
+    </div>
+  </section>
+
+  <section id="clients" hidden class="admin-only">
+    <div class="toolbar">
+      <div><h1>Clientes</h1><div class="muted">Los clientes registrados aparecen arriba con su color asignado y cantidad de sub-clientes.</div></div>
+      <button id="newClient">+ Nuevo cliente</button>
+    </div>
+    <div id="clientCards" class="clientlist"></div>
+  </section>
+
+  <section id="scanner" hidden class="admin-only">
+    <div class="toolbar">
+      <div><h1>Carga de Facturas y Excel</h1><div class="muted">Importá comprobantes PDF/imagen o planillas mensuales con anti-duplicados. L.C. Leonel solo aplica al seleccionar a Oriana.</div></div>
+      <span class="pill">Motor V25.5</span>
+    </div>
+    <div class="notice"><b>Reglas activas:</b> anti-duplicados automático, <i>L.C. Leonel</i> exclusivo de la cuenta de <b>Oriana</b> y herencia de fechas por bloque diario.</div>
+    <div class="panel">
+      <div class="filters" style="margin-bottom:14px">
+        <div class="field" style="flex:1;min-width:220px">
+          <label>Cliente destino</label>
+          <select id="scanClient"></select>
+        </div>
+        <div class="field" style="min-width:160px">
+          <label>Año base</label>
+          <input type="number" id="scanBaseYear" min="2020" max="2035">
+        </div>
+        <div class="field" style="min-width:180px">
+          <label>Tipo para PDF / Imagen</label>
+          <select id="scanDefaultType">
+            <option value="Ingreso">Ingreso</option>
+            <option value="Egreso">Egreso</option>
+          </select>
+        </div>
+      </div>
+      <div class="upload-dropzone" id="dropZone">
+        <b>📁 Arrastrá facturas (PDF / imagen) o archivos Excel (.xlsx / .xls / .csv) aquí</b>
+        <div class="muted" style="margin:6px 0">o hacé clic para seleccionarlos</div>
+        <input id="scanFile" type="file" multiple accept=".pdf,image/jpeg,image/png,image/webp,.xlsx,.xls,.csv">
+        <button type="button" class="secondary" style="margin-top:8px">Elegir archivos</button>
+        <div id="ocrStatus">Esperando archivos...</div>
+      </div>
+      <div style="margin-top:16px">
+        <h3>Detalle de la última carga</h3>
+        <textarea id="ocrRaw" rows="7" readonly placeholder="El detalle de lectura aparece aquí al procesar archivos..."></textarea>
+      </div>
+      <div style="margin-top:16px">
+        <h3>Historial reciente de archivos cargados</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Fecha/Hora</th><th>Archivo</th><th>Nuevos</th><th>Duplicados omitidos</th></tr></thead>
+            <tbody id="importHistoryRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bottom-quick-bar admin-only">
+    <span class="muted">Accesos rápidos:</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="bottomNewClientBtn">+ Nuevo cliente</button>
+      <button class="secondary" id="bottomLoadInvoicesBtn">📄 Cargar facturas</button>
+    </div>
+  </div>
+
+  <footer>Contabilidad en casa</footer>
+  </main>
+</div>
+
+<div class="toast" id="toastBox"></div>
+
+<div class="modal" id="changePinModal"><div class="dialog">
+  <h2>Cambiar PIN</h2>
+  <form id="changePinForm">
+    <div class="formgrid">
+      <div class="field full admin-only" id="pinTargetScopeRow">
+        <label>¿Qué PIN querés cambiar?</label>
+        <select id="pinTargetScope">
+          <option value="admin">PIN de Administrador</option>
+          <option value="client">PIN de un Cliente</option>
+        </select>
+      </div>
+      <div class="field full admin-only" id="pinTargetClientRow" style="display:none">
+        <label>Cliente</label>
+        <select id="pinTargetClientSelect"></select>
+      </div>
+      <div class="field full" id="currentPinRow">
+        <label id="currentPinLabel">PIN actual</label>
+        <input id="currentPinInput" type="password" placeholder="Ingresá tu PIN actual" required>
+      </div>
+      <div class="field full">
+        <label>PIN nuevo</label>
+        <input id="newPinInput" type="password" placeholder="Ingresá el nuevo PIN" required>
+      </div>
+      <div class="field full">
+        <label>Repetir PIN nuevo</label>
+        <input id="confirmPinInput" type="password" placeholder="Repetí el nuevo PIN" required>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" class="secondary" data-close="changePinModal">Cancelar</button>
+      <button type="submit">Guardar PIN</button>
+    </div>
+  </form>
+</div></div>
+
+<div class="modal" id="subClientModal"><div class="dialog">
+  <h2 id="subClientModalTitle">Sub-cliente</h2>
+  <form id="subClientForm">
+    <input type="hidden" id="scEditId">
+    <div class="formgrid">
+      <div class="field full"><label>Cliente Propietario</label><select id="scOwnerInput" required></select></div>
+      <div class="field full"><label>Nombre y Apellido / Razón Social</label><input id="scNameInput" placeholder="Ej: Juan Pérez" required></div>
+      <div class="field full"><label>CUIL / CUIT</label><input id="scCuilInput" placeholder="Ej: 20-12345678-9" required></div>
+    </div>
+    <div class="actions"><button type="button" class="secondary" data-close="subClientModal">Cancelar</button><button>Guardar</button></div>
+  </form>
+</div></div>
+
+<div class="modal" id="clientModal"><div class="dialog"><h2 id="clientModalTitle">Ficha de cliente</h2><form id="clientForm"><input type="hidden" id="cEditId"><div class="formgrid"><div class="field full"><label>Nombre y apellido / Razón social</label><input id="cName" required></div><div class="field"><label>CUIT / CUIL</label><input id="cuit" placeholder="20-12345678-9" required></div><div class="field"><label>Categoría</label><select id="cCategory"><option value="">Seleccionar</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option><option>K</option><option>No corresponde</option></select></div><div class="field"><label>PIN de consulta</label><input id="cPin" placeholder="Ej: 4321" value="1234" required></div><div class="field"><label>Color asignado para este cliente</label><select id="cColor"><option value="#142b45">Azul Marino (Clásico)</option><option value="#15803d">Verde Esmeralda</option><option value="#1d4ed8">Azul Real</option><option value="#6d28d9">Violeta</option><option value="#9f1239">Bordó</option><option value="#0f766e">Turquesa Oscuro</option><option value="#92400e">Ámbar / Marrón</option></select></div></div><div class="actions"><button type="button" class="secondary" data-close="clientModal">Cancelar</button><button>Guardar cliente</button></div></form></div></div>
+
+<div class="modal" id="reportModal"><div class="dialog" style="width:min(820px,100%)">
+  <h2 id="reportTitle">Informe Mensual</h2>
+  <div class="muted" id="reportSubtitle" style="margin-bottom:12px">Resumen por período.</div>
+  <div class="filters" style="margin-bottom:10px"><select id="reportMonthFilter"></select></div>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px">
+    <div class="metric"><small>Ingresos</small><strong class="pos" id="repIncome">$0</strong></div>
+    <div class="metric"><small>Egresos</small><strong class="neg" id="repExpense">$0</strong></div>
+    <div class="metric" id="repLeonelCard"><small>L.C. Leonel (+)</small><strong class="fund" id="repLeonel">$0</strong></div>
+    <div class="metric"><small>Balance General</small><strong id="repBalance">$0</strong></div>
+  </div>
+  <div class="actions" style="margin-top:15px">
+    <button class="secondary admin-only" id="exportStandaloneHTML" style="background:#dbeafe;color:#1e40af">🌐 Exportar HTML Cliente</button>
+    <button class="secondary" id="exportClientReport">Exportar CSV</button>
+    <button type="button" class="secondary" data-close="reportModal">Cerrar</button>
+  </div>
+</div></div>
+
+<div class="modal" id="movementModal"><div class="dialog"><h2 id="movementModalTitle">Movimiento</h2><form id="movementForm"><input type="hidden" id="mEditId"><div class="formgrid"><div class="field"><label>Fecha</label><input id="mDate" type="date" required></div><div class="field"><label>Cliente</label><select id="mClient" required></select></div><div class="field"><label>Tipo</label><select id="mType"><option>Ingreso</option><option>Egreso</option><option id="mOptLeonel" value="Fondo Leonel">Fondo Leonel</option></select></div><div class="field"><label>Categoría</label><select id="mCategory"><option>Ventas / facturación</option><option>Servicios</option><option>Mercadería</option><option>Alquiler</option><option>Impuestos</option><option>Monotributo</option><option>Obra social</option><option>Servicios públicos</option><option>Transporte</option><option value="Fondos / L.C. Leonel">Fondos / L.C. Leonel</option><option>Otros</option></select></div><div class="field"><label>Importe (ARS)</label><input id="mAmount" type="number" min="0.01" step="0.01" required></div><div class="field"><label>Medio de pago</label><select id="mPayment"><option>Transferencia</option><option>Efectivo</option><option>Mercado Pago</option><option>Tarjeta</option><option>Otro</option></select></div><div class="field full"><label>Descripción / número</label><input id="mDescription"></div></div><div class="actions"><button type="button" class="secondary" data-close="movementModal">Cancelar</button><button>Guardar</button></div></form></div></div>
+
+<script id="embeddedSeedData" type="application/json">{}</script>
+<script>
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:2}).format(Number(n)||0);
+const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+$('scanBaseYear').value = new Date().getFullYear();
+
+let toastTimer = null;
+function showToast(msg){
+  let box = $('toastBox');
+  box.textContent = msg;
+  box.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>box.classList.remove('show'), 2600);
+}
+
+function getMasterPin(){ return localStorage.getItem('contabilidad_casa_admin_pin') || '1234'; }
+
+function isOrianaClient(clientObj){
+  if(!clientObj) return false;
+  return String(clientObj.name || '').toLowerCase().includes('oriana');
+}
+
+function getOrianaClientId(){
+  let found = clients.find(c => isOrianaClient(c));
+  return found ? found.id : null;
+}
+
+function sanitizeMovesForOriana(){
+  let orianaId = getOrianaClientId();
+  moves = moves.map(m => {
+    if(m.type === 'Fondo Leonel'){
+      if(!orianaId || m.clientId !== orianaId){
+        return { ...m, type: 'Egreso', category: m.category === 'Fondos / L.C. Leonel' ? 'Otros' : m.category };
+      }
+    }
+    return m;
+  });
+}
+
+function loadData(k){
+  let raw = localStorage.getItem('contabilidad_casa_'+k) || localStorage.getItem('bc5_'+k);
+  if(raw){
+    try {
+      if(typeof CryptoJS !== 'undefined'){
+        let bytes = CryptoJS.AES.decrypt(raw, getMasterPin());
+        let decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        if(decrypted) return JSON.parse(decrypted);
+      }
+      return JSON.parse(raw);
+    } catch(e) {
+      try { return JSON.parse(raw); } catch(err){}
+    }
+  }
+  try {
+    let seedEl = $('embeddedSeedData');
+    if(seedEl && seedEl.textContent.trim()){
+      let seed = JSON.parse(seedEl.textContent);
+      if(Array.isArray(seed[k])) return seed[k];
+    }
+  } catch(e){}
+  return [];
+}
+
+function saveDataWithPin(k, data, pinKey){
+  try {
+    if(typeof CryptoJS !== 'undefined'){
+      let encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), pinKey).toString();
+      localStorage.setItem('contabilidad_casa_'+k, encrypted);
+    } else {
+      localStorage.setItem('contabilidad_casa_'+k, JSON.stringify(data));
+    }
+  } catch(e) {
+    localStorage.setItem('contabilidad_casa_'+k, JSON.stringify(data));
+  }
+}
+
+function saveData(k, data){ saveDataWithPin(k, data, getMasterPin()); }
+
+let clients=loadData('clients');
+let moves=loadData('moves');
+let taxes=loadData('taxes');
+let subClients=loadData('subClients');
+let importHistory=loadData('importHistory');
+sanitizeMovesForOriana();
+
+let activeReportClientId=null;
+let currentRole = null;
+let currentClientId = null;
+let selectedCalendarYear = String(new Date().getFullYear());
+let selectedCalendarMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+
+function normalizeTaxId(raw){ return String(raw || '').replace(/\D/g, ''); }
+function formatTaxId(raw){
+  let d = normalizeTaxId(raw);
+  if(d.length === 11) return `${d.slice(0,2)}-${d.slice(2,10)}-${d.slice(10)}`;
+  return String(raw || '').trim();
+}
+
+function canShowLeonelForScope(selectedClientId){
+  if(currentRole === 'client' && currentClientId){
+    let c = clients.find(x => x.id === currentClientId);
+    return isOrianaClient(c);
+  }
+  if(selectedClientId){
+    let c = clients.find(x => x.id === selectedClientId);
+    return isOrianaClient(c);
+  }
+  return !!getOrianaClientId();
+}
+
+function updateSessionView(){
+  let loggedIn = currentRole === 'admin' || (currentRole === 'client' && !!currentClientId);
+  $('accessGate').style.display = loggedIn ? 'none' : 'block';
+  $('appShell').style.display = loggedIn ? 'block' : 'none';
+  $('switchRoleBtn').style.display = loggedIn ? 'inline-block' : 'none';
+  $('changePinBtn').style.display = loggedIn ? 'inline-block' : 'none';
+  document.body.classList.toggle('is-admin', currentRole === 'admin');
+  if(!loggedIn){
+    $('userRoleBadge').textContent = '🔒 Sin sesión';
+    document.documentElement.style.setProperty('--navy', '#142b45');
+    $('appHeader').style.background = '#142b45';
+  }
+}
+
+$('changePinBtn').onclick = ()=>{
+  $('changePinForm').reset();
+  if(currentRole === 'admin'){
+    $('pinTargetScopeRow').style.display = 'flex';
+    $('pinTargetScope').value = 'admin';
+    $('pinTargetClientRow').style.display = 'none';
+    $('pinTargetClientSelect').innerHTML = clients.map(c => `<option value="${c.id}">${esc(c.name)} (PIN actual: ${esc(c.pin||'1234')})</option>`).join('');
+    $('currentPinRow').style.display = 'flex';
+    $('currentPinInput').required = true;
+    $('currentPinLabel').textContent = 'PIN actual de Administrador';
+  } else {
+    $('pinTargetScopeRow').style.display = 'none';
+    $('pinTargetClientRow').style.display = 'none';
+    $('currentPinRow').style.display = 'flex';
+    $('currentPinInput').required = true;
+    $('currentPinLabel').textContent = 'Tu PIN actual';
+  }
+  show('changePinModal');
+};
+
+$('pinTargetScope').onchange = ()=>{
+  let isClientMode = $('pinTargetScope').value === 'client';
+  $('pinTargetClientRow').style.display = isClientMode ? 'flex' : 'none';
+  $('currentPinRow').style.display = isClientMode ? 'none' : 'flex';
+  $('currentPinInput').required = !isClientMode;
+};
+
+$('changePinForm').onsubmit = (e)=>{
+  e.preventDefault();
+  let curPin = $('currentPinInput').value.trim();
+  let newPin = $('newPinInput').value.trim();
+  let confPin = $('confirmPinInput').value.trim();
+
+  if(!newPin){ alert('Ingresá un PIN nuevo.'); return; }
+  if(newPin !== confPin){ alert('Los PIN nuevos no coinciden.'); return; }
+
+  if(currentRole === 'admin'){
+    let scope = $('pinTargetScope').value;
+    if(scope === 'admin'){
+      if(curPin !== getMasterPin()){
+        alert('El PIN actual de administrador es incorrecto.');
+        return;
+      }
+      localStorage.setItem('contabilidad_casa_admin_pin', newPin);
+      saveDataWithPin('clients', clients, newPin);
+      saveDataWithPin('moves', moves, newPin);
+      saveDataWithPin('taxes', taxes, newPin);
+      saveDataWithPin('subClients', subClients, newPin);
+      saveDataWithPin('importHistory', importHistory, newPin);
+      hide('changePinModal');
+      showToast('PIN de administrador actualizado');
+    } else {
+      let targetCid = $('pinTargetClientSelect').value;
+      let idx = clients.findIndex(c => c.id === targetCid);
+      if(idx === -1){ alert('Cliente no encontrado.'); return; }
+      clients[idx] = { ...clients[idx], pin: newPin };
+      persist();
+      hide('changePinModal');
+      showToast(`PIN actualizado para ${clients[idx].name}`);
+    }
+  } else if(currentRole === 'client' && currentClientId){
+    let idx = clients.findIndex(c => c.id === currentClientId);
+    if(idx === -1){ alert('Cuenta no encontrada.'); return; }
+    let existingPin = String(clients[idx].pin || '1234').trim();
+    if(curPin !== existingPin){
+      alert('Tu PIN actual es incorrecto.');
+      return;
+    }
+    clients[idx] = { ...clients[idx], pin: newPin };
+    persist();
+    hide('changePinModal');
+    showToast('Tu PIN fue actualizado');
+  }
+};
+
+$('gateTabClient').onclick = ()=>{
+  $('gateTabClient').classList.add('active');
+  $('gateTabAdmin').classList.remove('active');
+  $('gateClientForm').style.display = 'block';
+  $('gateAdminForm').style.display = 'none';
+};
+
+$('gateTabAdmin').onclick = ()=>{
+  $('gateTabAdmin').classList.add('active');
+  $('gateTabClient').classList.remove('active');
+  $('gateAdminForm').style.display = 'block';
+  $('gateClientForm').style.display = 'none';
+};
+
+$('gateClientForm').onsubmit = (e)=>{
+  e.preventDefault();
+  let cuitInput = normalizeTaxId($('gateClientCuit').value);
+  let pinInput = $('gateClientPin').value.trim();
+  let found = clients.find(c => normalizeTaxId(c.cuit) === cuitInput && String(c.pin || '1234').trim() === pinInput);
+  if(!found){
+    alert('CUIT/CUIL o PIN incorrecto.');
+    return;
+  }
+  currentRole = 'client';
+  currentClientId = found.id;
+  $('gateClientPin').value = '';
+  updateSessionView();
+  tab('dashboard');
+  render();
+  showToast(`Bienvenido/a, ${found.name}`);
+};
+
+$('gateAdminForm').onsubmit = (e)=>{
+  e.preventDefault();
+  let pinInput = $('gateAdminPin').value.trim();
+  if(pinInput !== getMasterPin()){
+    alert('PIN de administrador incorrecto.');
+    return;
+  }
+  currentRole = 'admin';
+  currentClientId = null;
+  $('gateAdminPin').value = '';
+  updateSessionView();
+  tab('dashboard');
+  render();
+  showToast('Sesión de administrador iniciada');
+};
+
+$('switchRoleBtn').onclick = ()=>{
+  currentRole = null;
+  currentClientId = null;
+  updateSessionView();
+  showToast('Sesión cerrada');
+};
+
+function applyThemeColor(){
+  let activeClient = null;
+  if(currentRole === 'client' && currentClientId){
+    activeClient = clients.find(c=>c.id===currentClientId);
+  } else if($('dashClient') && $('dashClient').value){
+    activeClient = clients.find(c=>c.id===$('dashClient').value);
+  }
+  let chosenColor = (activeClient && activeClient.color) ? activeClient.color : '#142b45';
+  document.documentElement.style.setProperty('--navy', chosenColor);
+  $('appHeader').style.background = chosenColor;
+}
+
+const persist=()=>{
+  sanitizeMovesForOriana();
+  saveData('clients', clients);
+  saveData('moves', moves);
+  saveData('taxes', taxes);
+  saveData('subClients', subClients);
+  saveData('importHistory', importHistory);
+  let now = new Date();
+  $('lastSyncBadge').textContent = `Actualizado: ${now.toTimeString().slice(0,5)}`;
+  if(currentRole) render();
+};
+
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function tab(n){
+  if(currentRole !== 'admin' && (n === 'clients' || n === 'scanner')) n = 'dashboard';
+  document.querySelectorAll('main>section').forEach(s=>s.hidden=s.id!==n);
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===n));
+  if(n === 'yearlyView') renderYearlyView();
+  if(n === 'subClientsTab') renderSubClientsView();
+  if(n === 'scanner') renderImportHistory();
+  if(n === 'movementsTab') renderMovementsTab();
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
+$('goScanner').onclick=()=>tab('scanner');
+$('goSubClients').onclick=()=>tab('subClientsTab');
+
+function exportBundleHtml(){
+  sanitizeMovesForOriana();
+  let seedPayload = {
+    clients,
+    moves,
+    taxes,
+    subClients,
+    importHistory
+  };
+  let safeJson = JSON.stringify(seedPayload).replace(/<\/script>/gi, '<\\/script>');
+  let docHtml = '<!doctype html>\n' + document.documentElement.outerHTML;
+  let updatedHtml = docHtml.replace(
+    /<script id="embeddedSeedData" type="application\/json">[\s\S]*?<\/script>/i,
+    `<script id="embeddedSeedData" type="application/json">${safeJson}<\/script>`
+  );
+  let blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('Archivo index.html con datos exportado');
+}
+
+$('exportBundleHtmlBtn').onclick = exportBundleHtml;
+$('exportBundleHtmlBtn2').onclick = exportBundleHtml;
+
+function openNewClientModal(){
+  $('cEditId').value = '';
+  $('clientModalTitle').textContent = 'Nuevo cliente';
+  $('clientForm').reset();
+  $('cPin').value = '1234';
+  $('cColor').value = '#142b45';
+  show('clientModal');
+}
+
+$('topNewClientBtn').onclick = openNewClientModal;
+$('bottomNewClientBtn').onclick = openNewClientModal;
+$('newClient').onclick = openNewClientModal;
+$('topLoadInvoicesBtn').onclick = ()=> tab('scanner');
+$('bottomLoadInvoicesBtn').onclick = ()=> tab('scanner');
+
+function syncLeonelOptionVisibility(targetClientId){
+  let allowLeonel = (currentRole === 'client' && currentClientId)
+    ? isOrianaClient(clients.find(c=>c.id===currentClientId))
+    : (targetClientId ? isOrianaClient(clients.find(c=>c.id===targetClientId)) : false);
+
+  if($('mOptLeonel')){
+    $('mOptLeonel').hidden = !allowLeonel;
+    if(!allowLeonel && $('mType').value === 'Fondo Leonel') $('mType').value = 'Egreso';
+  }
+  let showFilterLeonel = canShowLeonelForScope(targetClientId);
+  if($('dashOptLeonel')){
+    $('dashOptLeonel').hidden = !showFilterLeonel;
+    if(!showFilterLeonel && $('dashType').value === 'Fondo Leonel') $('dashType').value = '';
+  }
+  if($('movesOptLeonel')){
+    $('movesOptLeonel').hidden = !showFilterLeonel;
+    if(!showFilterLeonel && $('movesTypeFilter').value === 'Fondo Leonel') $('movesTypeFilter').value = '';
+  }
+}
+
+function refresh(){
+  let orderedClients = [...clients].reverse();
+  let opts=orderedClients.map(c=>`<option value="${c.id}">${esc(c.name)} · ${esc(formatTaxId(c.cuit))}</option>`).join('');
+  $('mClient').innerHTML=opts;
+  $('scOwnerInput').innerHTML=opts;
+
+  let oldScan=$('scanClient').value;
+  $('scanClient').innerHTML=opts||'<option value="">Sin clientes</option>';
+  if(oldScan && clients.some(c=>c.id===oldScan)) $('scanClient').value=oldScan;
+
+  let old=$('dashClient').value;
+  let oldMovesClient=$('movesClientFilter').value;
+  let oldYrClient=$('yearClientFilter').value;
+  let oldSubOwner=$('subClientOwnerSelect').value;
+
+  if(currentRole==='client' && currentClientId){
+    let client = clients.find(c=>c.id===currentClientId);
+    let singleOpt = `<option value="${client?client.id:''}">${esc(client?client.name:'Cliente')}</option>`;
+    $('dashClient').innerHTML=singleOpt; $('dashClient').value=client?client.id:''; $('dashClient').disabled=true;
+    $('movesClientFilter').innerHTML=singleOpt; $('movesClientFilter').value=client?client.id:''; $('movesClientFilter').disabled=true;
+    $('yearClientFilter').innerHTML=singleOpt; $('yearClientFilter').value=client?client.id:''; $('yearClientFilter').disabled=true;
+    $('subClientOwnerSelect').innerHTML=singleOpt; $('subClientOwnerSelect').value=client?client.id:''; $('subClientOwnerSelect').disabled=true;
+  } else {
+    $('dashClient').disabled=false;
+    $('dashClient').innerHTML='<option value="">Todos los clientes</option>'+orderedClients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    $('dashClient').value=old;
+
+    $('movesClientFilter').disabled=false;
+    $('movesClientFilter').innerHTML='<option value="">Todos los clientes</option>'+orderedClients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    $('movesClientFilter').value=oldMovesClient;
+
+    $('yearClientFilter').disabled=false;
+    $('yearClientFilter').innerHTML='<option value="">Todos los clientes</option>'+orderedClients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    $('yearClientFilter').value=oldYrClient;
+
+    $('subClientOwnerSelect').disabled=false;
+    $('subClientOwnerSelect').innerHTML=orderedClients.length
+      ? orderedClients.map(c=>`<option value="${c.id}">${esc(c.name)} (${subClients.filter(sc=>sc.ownerClientId===c.id).length})</option>`).join('')
+      : '<option value="">Sin clientes</option>';
+    if(oldSubOwner && orderedClients.some(c=>c.id===oldSubOwner)) $('subClientOwnerSelect').value=oldSubOwner;
+  }
+  syncLeonelOptionVisibility((currentRole==='client'&&currentClientId)?currentClientId:$('dashClient').value);
+  applyThemeColor();
+}
+
+function isMoveVisibleInClientScope(m, scopeClientId){
+  let owner = clients.find(c => c.id === m.clientId);
+  if(m.type === 'Fondo Leonel' && !isOrianaClient(owner)) return false;
+  if(scopeClientId) return m.clientId === scopeClientId;
+  return true;
+}
+
+function filtered(){
+  let c=(currentRole==='client'&&currentClientId)?currentClientId:$('dashClient').value;
+  let m=$('dashMonth').value, t=$('dashType').value;
+  let q=($('dashSearch').value||'').toLowerCase().trim();
+  return moves.filter(x=>{
+    if(!isMoveVisibleInClientScope(x, c)) return false;
+    if(m && !x.date.startsWith(m)) return false;
+    if(t && x.type!==t) return false;
+    if(q){
+      let matchDesc = String(x.description||'').toLowerCase().includes(q);
+      let matchCat = String(x.category||'').toLowerCase().includes(q);
+      let matchAmt = String(x.amount||'').includes(q);
+      if(!matchDesc && !matchCat && !matchAmt) return false;
+    }
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+}
+
+function filteredMovementsTab(){
+  let c=(currentRole==='client'&&currentClientId)?currentClientId:$('movesClientFilter').value;
+  let m=$('movesMonthFilter').value, t=$('movesTypeFilter').value;
+  let q=($('movesSearchFilter').value||'').toLowerCase().trim();
+  return moves.filter(x=>{
+    if(!isMoveVisibleInClientScope(x, c)) return false;
+    if(m && !x.date.startsWith(m)) return false;
+    if(t && x.type!==t) return false;
+    if(q){
+      let matchDesc = String(x.description||'').toLowerCase().includes(q);
+      let matchCat = String(x.category||'').toLowerCase().includes(q);
+      let matchAmt = String(x.amount||'').includes(q);
+      if(!matchDesc && !matchCat && !matchAmt) return false;
+    }
+    return true;
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+}
+
+function renderMovementsTab(){
+  let list = filteredMovementsTab();
+  $('allMovementRows').innerHTML = list.map(x=>{
+    let col = x.type==='Ingreso'?'var(--green)':(x.type==='Egreso'?'var(--red)':'var(--teal)');
+    return `<tr>
+      <td class="admin-only"><input type="checkbox" class="move-chk" value="${esc(x.id)}" onchange="updateBulkSelectionUI()"></td>
+      <td>${esc(x.date)}</td>
+      <td>${esc(clients.find(c=>c.id===x.clientId)?.name||'Eliminado')}</td>
+      <td><span style="color:${col};font-weight:700">${esc(x.type)}</span></td>
+      <td>${esc(x.category)}</td>
+      <td>${esc(x.description)}</td>
+      <td>${fmt(x.amount)}</td>
+      <td>${esc(x.source||'Manual')}</td>
+      <td class="admin-only" style="white-space:nowrap">
+        <button class="secondary" style="padding:5px 8px;font-size:11px" onclick="editMovement('${x.id}')">Editar</button>
+        <button class="danger" style="padding:5px 8px;font-size:11px" onclick="deleteMovement('${x.id}')">Borrar</button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="9" class="empty">Sin movimientos para mostrar.</td></tr>';
+  updateBulkSelectionUI();
+}
+
+function updateBulkSelectionUI(){
+  let checks = document.querySelectorAll('.move-chk:checked');
+  let totalChecks = document.querySelectorAll('.move-chk');
+  $('selectedCount').textContent = checks.length;
+  $('deleteSelectedMoves').disabled = checks.length === 0;
+  $('selectAllMoves').checked = totalChecks.length > 0 && checks.length === totalChecks.length;
+}
+
+$('selectAllMoves').onchange = (e)=>{
+  let checked = e.target.checked;
+  document.querySelectorAll('.move-chk').forEach(cb => cb.checked = checked);
+  updateBulkSelectionUI();
+};
+
+$('deleteSelectedMoves').onclick = ()=>{
+  let checks = [...document.querySelectorAll('.move-chk:checked')];
+  if(!checks.length) return;
+  if(confirm(`¿Eliminar los ${checks.length} movimientos seleccionados?`)){
+    let idsToRemove = new Set(checks.map(cb => cb.value));
+    moves = moves.filter(m => !idsToRemove.has(m.id));
+    $('selectAllMoves').checked = false;
+    persist();
+    showToast('Movimientos eliminados');
+  }
+};
+
+$('deleteAllMoves').onclick = ()=>{
+  if(!moves.length){ showToast('No hay movimientos para eliminar'); return; }
+  if(confirm(`¿Eliminar TODOS los movimientos (${moves.length} registros)?`)){
+    moves = [];
+    $('selectAllMoves').checked = false;
+    persist();
+    showToast('Base de movimientos vaciada');
+  }
+};
+
+function formatMonthLabel(ym){
+  let [y, m] = ym.split('-');
+  let idx = parseInt(m, 10) - 1;
+  return `${MONTH_NAMES_ES[idx] || m} ${y}`;
+}
+
+function render(){
+  if(!currentRole) return;
+  if(currentRole === 'client'){
+    let client = clients.find(c=>c.id===currentClientId);
+    $('userRoleBadge').textContent = `👁️ ${client?client.name:'Cliente'}`;
+    $('dashTitle').textContent = `Informe: ${client?client.name:''}`;
+    $('dashSub').textContent = 'Vista de consulta del cliente.';
+  } else {
+    $('userRoleBadge').textContent = '🔑 Administrador';
+    $('dashTitle').textContent = 'Panel financiero';
+    $('dashSub').textContent = 'Resumen general y gráficos.';
+  }
+
+  refresh();
+  let scopeClient = (currentRole==='client'&&currentClientId)?currentClientId:$('dashClient').value;
+  let showLeonel = canShowLeonelForScope(scopeClient);
+  $('leonelMetricCard').style.display = showLeonel ? 'block' : 'none';
+  $('legendLeonel').style.display = showLeonel ? 'inline' : 'none';
+
+  let a=filtered();
+  let i=a.filter(x=>x.type==='Ingreso').reduce((s,x)=>s+x.amount,0);
+  let o=a.filter(x=>x.type==='Egreso').reduce((s,x)=>s+x.amount,0);
+  let f=showLeonel ? a.filter(x=>x.type==='Fondo Leonel').reduce((s,x)=>s+x.amount,0) : 0;
+  let b=i + f - o;
+
+  $('income').textContent=fmt(i);
+  $('expense').textContent=fmt(o);
+  $('leonelTotal').textContent=fmt(f);
+  $('balance').textContent=fmt(b);
+  $('balance').className=b>=0?'pos':'neg';
+  $('count').textContent=a.length;
+
+  const chartMonths=[...new Set(a.map(x=>x.date.slice(0,7)))].sort();
+  function drawBars(target,type,color){
+    if(!chartMonths.length){$(target).innerHTML='<div class="chart-empty">Sin movimientos para graficar.</div>';return}
+    const vals=chartMonths.map(m=>a.filter(x=>x.type===type&&x.date.startsWith(m)).reduce((s,x)=>s+x.amount,0));
+    const max=Math.max(...vals,1);
+    $(target).innerHTML='<div class="bar-chart">'+vals.map((v,k)=>`<div class="bar-group"><span class="bar-value">${v?fmt(v):'—'}</span><div class="bar-fill" style="width:26px;height:${v?Math.max(4,v/max*72):2}%;background:${color}"></div><span class="bar-label">${MONTH_NAMES_ES[parseInt(chartMonths[k].slice(5,7),10)-1].slice(0,3)} ${chartMonths[k].slice(2,4)}</span></div>`).join('')+'</div>';
+  }
+  drawBars('incomeChart','Ingreso','#16a34a');
+  drawBars('expenseChart','Egreso','#dc2626');
+
+  if(!chartMonths.length){
+    $('perMonthChartsContainer').innerHTML = '<div class="chart-empty" style="grid-column:1/-1">Cargá movimientos para ver el gráfico de cada mes.</div>';
+  } else {
+    $('perMonthChartsContainer').innerHTML = chartMonths.map(ym => {
+      let mMoves = a.filter(x => x.date.startsWith(ym));
+      let mInc = mMoves.filter(x => x.type === 'Ingreso').reduce((s,x) => s + x.amount, 0);
+      let mExp = mMoves.filter(x => x.type === 'Egreso').reduce((s,x) => s + x.amount, 0);
+      let mFun = showLeonel ? mMoves.filter(x => x.type === 'Fondo Leonel').reduce((s,x) => s + x.amount, 0) : 0;
+      let mBal = mInc + mFun - mExp;
+      let maxVal = Math.max(mInc, mExp, mFun, 1);
+      let incPct = mInc > 0 ? Math.max(6, (mInc / maxVal) * 80) : 2;
+      let expPct = mExp > 0 ? Math.max(6, (mExp / maxVal) * 80) : 2;
+      let funPct = mFun > 0 ? Math.max(6, (mFun / maxVal) * 80) : 2;
+
+      return `<div class="mini-month-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font-size:15px;color:var(--navy)">${formatMonthLabel(ym)}</b>
+          <span class="pill">${mMoves.length} movs</span>
+        </div>
+        <div class="mini-bars">
+          <div class="mini-bar-col">
+            <span class="bar-value" style="color:var(--green);font-weight:700">${fmt(mInc)}</span>
+            <div class="mini-bar-rect" style="height:${incPct}%;background:#16a34a"></div>
+            <span style="font-size:10px;color:#475569">Ingresos</span>
+          </div>
+          <div class="mini-bar-col">
+            <span class="bar-value" style="color:var(--red);font-weight:700">${fmt(mExp)}</span>
+            <div class="mini-bar-rect" style="height:${expPct}%;background:#dc2626"></div>
+            <span style="font-size:10px;color:#475569">Egresos</span>
+          </div>
+          ${showLeonel ? `<div class="mini-bar-col">
+            <span class="bar-value" style="color:var(--teal);font-weight:700">${fmt(mFun)}</span>
+            <div class="mini-bar-rect" style="height:${funPct}%;background:#0d9488"></div>
+            <span style="font-size:10px;color:#475569">Leonel (+)</span>
+          </div>` : ''}
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;padding-top:4px">
+          <span class="muted">Balance:</span>
+          <b class="${mBal>=0?'pos':'neg'}">${fmt(mBal)}</b>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  let visibleClients = (currentRole === 'client' && currentClientId) ? clients.filter(c=>c.id===currentClientId) : [...clients].reverse();
+
+  $('clientCards').innerHTML=visibleClients.map(c=>{
+    let cm=moves.filter(m=>isMoveVisibleInClientScope(m, c.id));
+    let allowLeonelCard = isOrianaClient(c);
+    let sum=cm.reduce((s,m)=>{
+      if(m.type==='Egreso') return s - m.amount;
+      if(m.type==='Fondo Leonel') return s + (allowLeonelCard ? m.amount : 0);
+      return s + m.amount;
+    },0);
+    let mySubClientsCount = subClients.filter(sc=>sc.ownerClientId===c.id).length;
+    let cColor = c.color || '#142b45';
+    return `<article class="client" style="border-left-color:${esc(cColor)}">
+      <div style="display:flex;justify-content:space-between;align-items:start;gap:6px">
+        <div><span class="color-dot" style="background:${esc(cColor)};margin-right:6px"></span><b>${esc(c.name)}</b></div>
+        <span class="pill" style="background:#ccfbf1;color:#115e59;font-weight:700">👥 ${mySubClientsCount}</span>
+      </div>
+      <div class="muted" style="margin:4px 0">CUIT/CUIL: ${esc(formatTaxId(c.cuit))} · Cat.: ${esc(c.category||'-')}</div>
+      <div class="muted" style="margin-bottom:8px">PIN: <b>${esc(c.pin||'1234')}</b></div>
+      <div style="font-size:13px;margin-bottom:8px">Movimientos: ${cm.length} · Balance: <b>${fmt(sum)}</b></div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <button class="secondary" style="flex:1;font-size:12px;padding:7px" onclick="openClientReport('${c.id}')">📁 Informe</button>
+        <button class="secondary" style="font-size:12px;padding:7px;background:#ccfbf1;color:#115e59" onclick="openClientPortfolio('${c.id}')">👥 Cartera</button>
+        <button class="secondary admin-only" style="font-size:12px;padding:7px" onclick="editClient('${c.id}')">Editar</button>
+        <button class="danger admin-only" style="font-size:12px;padding:7px" onclick="deleteClient('${c.id}')">Borrar</button>
+      </div>
+    </article>`
+  }).join('')||'<div class="empty">No hay clientes cargados.</div>';
+
+  if(activeReportClientId) updateClientReportModal();
+  if(!$('movementsTab').hidden) renderMovementsTab();
+  if(!$('yearlyView').hidden) renderYearlyView();
+  if(!$('subClientsTab').hidden) renderSubClientsView();
+  if(!$('scanner').hidden) renderImportHistory();
+}
+
+function renderImportHistory(){
+  $('importHistoryRows').innerHTML = importHistory.slice().reverse().map(item => `
+    <tr>
+      <td>${esc(item.time)}</td>
+      <td><b>${esc(item.fileName)}</b></td>
+      <td class="pos"><b>+${item.added}</b></td>
+      <td class="muted">${item.skipped}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="4" class="empty">Todavía no se cargaron archivos en esta sesión.</td></tr>';
+}
+
+window.openClientPortfolio = function(ownerId){
+  tab('subClientsTab');
+  if(currentRole === 'admin') $('subClientOwnerSelect').value = ownerId;
+  renderSubClientsView();
+};
+
+function renderSubClientsView(){
+  let ownerId = (currentRole === 'client' && currentClientId) ? currentClientId : $('subClientOwnerSelect').value;
+  let ownerObj = clients.find(c => c.id === ownerId);
+  let searchQuery = ($('subClientSearch').value || '').toLowerCase().trim();
+
+  let myPortfolio = subClients.filter(sc => sc.ownerClientId === ownerId);
+  let filteredPortfolio = myPortfolio.filter(sc =>
+    !searchQuery ||
+    sc.name.toLowerCase().includes(searchQuery) ||
+    sc.cuil.toLowerCase().includes(searchQuery)
+  );
+
+  $('subClientCountMetric').textContent = myPortfolio.length;
+  $('subClientOwnerNameMetric').textContent = ownerObj ? ownerObj.name : '-';
+  $('subClientGlobalCountMetric').textContent = subClients.length;
+  $('subClientTableTitle').textContent = ownerObj
+    ? `Cartera de ${ownerObj.name} (${filteredPortfolio.length})`
+    : 'Listado de Sub-clientes';
+
+  $('subClientRows').innerHTML = filteredPortfolio.map((sc, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td><b>${esc(sc.name)}</b></td>
+      <td>${esc(formatTaxId(sc.cuil))}</td>
+      <td><span class="pill">${esc(sc.source || 'Manual')}</span></td>
+      <td class="admin-only" style="white-space:nowrap">
+        <button class="secondary" style="padding:5px 8px;font-size:11px" onclick="editSubClient('${sc.id}')">Editar</button>
+        <button class="danger" style="padding:5px 8px;font-size:11px" onclick="deleteSubClient('${sc.id}')">Borrar</button>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="5" class="empty">Sin sub-clientes para mostrar.</td></tr>`;
+}
+
+$('subClientOwnerSelect').onchange = renderSubClientsView;
+$('subClientSearch').oninput = renderSubClientsView;
+
+$('openNewSubClientModal').onclick = ()=>{
+  if(!clients.length){ showToast('Creá un cliente principal primero'); tab('clients'); return; }
+  $('scEditId').value = '';
+  $('subClientModalTitle').textContent = 'Nuevo Sub-cliente';
+  $('scNameInput').value = '';
+  $('scCuilInput').value = '';
+  if($('subClientOwnerSelect').value) $('scOwnerInput').value = $('subClientOwnerSelect').value;
+  show('subClientModal');
+};
+
+window.editSubClient = function(id){
+  let sc = subClients.find(x => x.id === id);
+  if(!sc) return;
+  $('scEditId').value = sc.id;
+  $('subClientModalTitle').textContent = 'Editar Sub-cliente';
+  $('scOwnerInput').value = sc.ownerClientId;
+  $('scNameInput').value = sc.name;
+  $('scCuilInput').value = formatTaxId(sc.cuil);
+  show('subClientModal');
+};
+
+$('subClientForm').onsubmit = (e)=>{
+  e.preventDefault();
+  let editId = $('scEditId').value;
+  let ownerId = $('scOwnerInput').value;
+  let name = $('scNameInput').value.trim();
+  let cuil = $('scCuilInput').value.trim();
+  if(!ownerId || !name || !cuil) return;
+
+  if(editId){
+    let idx = subClients.findIndex(x => x.id === editId);
+    if(idx !== -1){
+      subClients[idx] = { ...subClients[idx], ownerClientId: ownerId, name, cuil };
+      showToast('Sub-cliente actualizado');
+    }
+  } else {
+    let ok = addSubClientChecked({ ownerClientId: ownerId, name, cuil, source: 'Manual' });
+    showToast(ok ? 'Sub-cliente agregado' : 'Ese sub-cliente ya existía en esta cartera');
+  }
+  e.target.reset();
+  $('scEditId').value = '';
+  hide('subClientModal');
+  persist();
+};
+
+function addSubClientChecked(item){
+  let cleanCuil = normalizeTaxId(item.cuil);
+  let cleanName = String(item.name || '').trim().toLowerCase();
+  let exists = subClients.some(sc =>
+    sc.ownerClientId === item.ownerClientId &&
+    ((cleanCuil && normalizeTaxId(sc.cuil) === cleanCuil) || sc.name.trim().toLowerCase() === cleanName)
+  );
+  if(!exists){
+    subClients.push({
+      id: String(Date.now() + Math.random()),
+      ownerClientId: item.ownerClientId,
+      name: String(item.name).trim(),
+      cuil: String(item.cuil).trim(),
+      source: item.source || 'Excel'
+    });
+    return true;
+  }
+  return false;
+}
+
+window.deleteSubClient = function(id){
+  if(confirm('¿Eliminar este sub-cliente?')){
+    subClients = subClients.filter(sc => sc.id !== id);
+    persist();
+    showToast('Sub-cliente eliminado');
+  }
+};
+
+$('deleteAllSubClientsOfOwner').onclick = ()=>{
+  let ownerId = $('subClientOwnerSelect').value;
+  let ownerObj = clients.find(c => c.id === ownerId);
+  if(!ownerObj) return;
+  let count = subClients.filter(sc => sc.ownerClientId === ownerId).length;
+  if(!count){ showToast('Esta cartera ya está vacía'); return; }
+  if(confirm(`¿Vaciar los ${count} sub-clientes de "${ownerObj.name}"?`)){
+    subClients = subClients.filter(sc => sc.ownerClientId !== ownerId);
+    persist();
+    showToast('Cartera vaciada');
+  }
+};
+
+$('exportSubClientsBtn').onclick = ()=>{
+  let ownerId = (currentRole === 'client' && currentClientId) ? currentClientId : $('subClientOwnerSelect').value;
+  let ownerObj = clients.find(c => c.id === ownerId) || { name: 'Cartera' };
+  let list = subClients.filter(sc => sc.ownerClientId === ownerId);
+  let h = ['Nro', 'Nombre', 'CUIL/CUIT', 'Cliente'];
+  let d = list.map((sc, i) => [i + 1, sc.name, formatTaxId(sc.cuil), ownerObj.name]);
+  let csv = [h, ...d].map(r => r.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  let a = document.createElement('a'), u = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.href = u; a.download = `SubClientes_${ownerObj.name.replace(/\s+/g,'_')}.csv`; a.click(); URL.revokeObjectURL(u);
+  showToast('CSV exportado');
+};
+
+const subDrop = $('subClientDropZone'), subInput = $('subClientExcelInput');
+subDrop.onclick = ()=> subInput.click();
+subDrop.ondragover = (e)=>{ e.preventDefault(); subDrop.classList.add('dragover'); };
+subDrop.ondragleave = (e)=>{ e.preventDefault(); subDrop.classList.remove('dragover'); };
+subDrop.ondrop = (e)=>{ e.preventDefault(); subDrop.classList.remove('dragover'); if(e.dataTransfer.files && e.dataTransfer.files.length > 0) handleSubClientExcel(e.dataTransfer.files[0]); };
+subInput.onchange = ()=>{ if(subInput.files && subInput.files.length > 0) handleSubClientExcel(subInput.files[0]); };
+
+async function handleSubClientExcel(file){
+  let ownerId = $('subClientOwnerSelect').value;
+  if(!ownerId){ showToast('Seleccioná un cliente primero'); return; }
+  let ownerObj = clients.find(c => c.id === ownerId);
+
+  try {
+    let data = await file.arrayBuffer();
+    let wb = XLSX.read(data, { type: 'array' });
+    let addedCount = 0, skippedCount = 0;
+
+    wb.SheetNames.forEach(sheetName => {
+      let ws = wb.Sheets[sheetName];
+      let rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+      if(!rows.length) return;
+
+      let nameCol = -1, cuilCol = -1, startRow = 0;
+      for(let r = 0; r < Math.min(rows.length, 6); r++){
+        let rowLower = rows[r].map(c => String(c || '').toLowerCase().trim());
+        rowLower.forEach((cell, idx) => {
+          if(nameCol === -1 && (cell.includes('nombre') || cell.includes('razon') || cell.includes('razón') || cell.includes('cliente') || cell.includes('apellido'))){
+            nameCol = idx; startRow = r + 1;
+          }
+          if(cuilCol === -1 && (cell.includes('cuil') || cell.includes('cuit') || cell.includes('dni') || cell.includes('documento'))){
+            cuilCol = idx; startRow = r + 1;
+          }
+        });
+        if(nameCol !== -1 && cuilCol !== -1) break;
+      }
+
+      if(nameCol === -1 || cuilCol === -1){
+        for(let r = 0; r < Math.min(rows.length, 10); r++){
+          rows[r].forEach((val, idx) => {
+            let s = String(val || '').trim();
+            if(cuilCol === -1 && (/^\d{2}-\d{7,8}-\d$/.test(s) || /^\d{10,11}$/.test(normalizeTaxId(s)))){
+              cuilCol = idx;
+            } else if(nameCol === -1 && s.length > 2 && !/^\d+$/.test(normalizeTaxId(s))){
+              nameCol = idx;
+            }
+          });
+        }
+        if(nameCol === -1) nameCol = 0;
+        if(cuilCol === -1) cuilCol = 1;
+      }
+
+      for(let r = startRow; r < rows.length; r++){
+        let row = rows[r];
+        let rawName = String(row[nameCol] || '').trim();
+        let rawCuil = String(row[cuilCol] || '').trim();
+        if(!rawName && !rawCuil) continue;
+        if(/^(nombre|razon|razón|cuil|cuit|total)\b/i.test(rawName)) continue;
+
+        let inserted = addSubClientChecked({
+          ownerClientId: ownerId,
+          name: rawName || `Sin nombre (${rawCuil})`,
+          cuil: rawCuil || 'Sin CUIL',
+          source: `Excel: ${file.name}`
+        });
+        if(inserted) addedCount++;
+        else skippedCount++;
+      }
+    });
+
+    persist();
+    $('subClientExcelStatus').textContent = `Listo: ${addedCount} nuevos en ${ownerObj ? ownerObj.name : 'cartera'} · ${skippedCount} duplicados omitidos.`;
+    showToast(`${addedCount} sub-clientes agregados`);
+  } catch(err) {
+    $('subClientExcelStatus').textContent = `Error al leer el archivo: ${err.message}`;
+  }
+}
+
+function renderYearlyView(){
+  let yearsSet = new Set(['2025', '2026', '2027', '2028']);
+  moves.forEach(m => { if(m.date && m.date.length >= 4) yearsSet.add(m.date.slice(0,4)); });
+  let yearsList = [...yearsSet].sort();
+
+  if(!yearsList.includes(selectedCalendarYear)){
+    selectedCalendarYear = yearsList.includes('2026') ? '2026' : yearsList[0];
+  }
+
+  $('yearSelector').innerHTML = yearsList.map(y => `<option value="${y}" ${y===selectedCalendarYear?'selected':''}>Año ${y}</option>`).join('');
+  $('yearSelector').onchange = (e)=>{ selectedCalendarYear = e.target.value; renderYearlyView(); };
+  $('yearClientFilter').onchange = ()=> renderYearlyView();
+
+  let clientFilter = (currentRole==='client'&&currentClientId) ? currentClientId : $('yearClientFilter').value;
+  let showLeonelYr = canShowLeonelForScope(clientFilter);
+  $('yrFundCard').style.display = showLeonelYr ? 'block' : 'none';
+
+  let yearMoves = moves.filter(m => m.date.startsWith(selectedCalendarYear) && isMoveVisibleInClientScope(m, clientFilter));
+
+  let yrInc = yearMoves.filter(x => x.type === 'Ingreso').reduce((s,x) => s + x.amount, 0);
+  let yrExp = yearMoves.filter(x => x.type === 'Egreso').reduce((s,x) => s + x.amount, 0);
+  let yrFun = showLeonelYr ? yearMoves.filter(x => x.type === 'Fondo Leonel').reduce((s,x) => s + x.amount, 0) : 0;
+  let yrBal = yrInc + yrFun - yrExp;
+
+  $('yrIncLabel').textContent = `Ingresos ${selectedCalendarYear}`;
+  $('yrExpLabel').textContent = `Egresos ${selectedCalendarYear}`;
+  $('yrFundLabel').textContent = `L.C. Leonel (+)`;
+  $('yrBalLabel').textContent = `Balance ${selectedCalendarYear}`;
+
+  $('yrIncome').textContent = fmt(yrInc);
+  $('yrExpense').textContent = fmt(yrExp);
+  $('yrFund').textContent = fmt(yrFun);
+  $('yrBalance').textContent = fmt(yrBal);
+  $('yrBalance').className = yrBal >= 0 ? 'pos' : 'neg';
+
+  $('twelveMonthsGrid').innerHTML = MONTH_NAMES_ES.map((mName, idx) => {
+    let mCode = String(idx + 1).padStart(2, '0');
+    let ym = `${selectedCalendarYear}-${mCode}`;
+    let mMoves = yearMoves.filter(m => m.date.startsWith(ym));
+    let mInc = mMoves.filter(x => x.type === 'Ingreso').reduce((s,x) => s + x.amount, 0);
+    let mExp = mMoves.filter(x => x.type === 'Egreso').reduce((s,x) => s + x.amount, 0);
+    let mFun = showLeonelYr ? mMoves.filter(x => x.type === 'Fondo Leonel').reduce((s,x) => s + x.amount, 0) : 0;
+    let isSel = mCode === selectedCalendarMonth;
+
+    return `<div class="month-tile ${isSel?'selected':''}" onclick="selectCalendarMonth('${mCode}')">
+      <div class="month-tile-title">
+        <span>${mName}</span>
+        <span class="pill" style="${mMoves.length?'background:#dbeafe;color:#1e40af':'background:#f1f5f9;color:#64748b'}">${mMoves.length}</span>
+      </div>
+      <div class="month-tile-row"><span class="muted">Ingresos:</span><b class="pos">${fmt(mInc)}</b></div>
+      <div class="month-tile-row"><span class="muted">Egresos:</span><b class="neg">${fmt(mExp)}</b></div>
+      ${showLeonelYr ? `<div class="month-tile-row"><span class="muted">Leonel (+):</span><b class="fund">${fmt(mFun)}</b></div>` : ''}
+    </div>`;
+  }).join('');
+
+  let activeYm = `${selectedCalendarYear}-${selectedCalendarMonth}`;
+  let monthNameActive = MONTH_NAMES_ES[parseInt(selectedCalendarMonth, 10) - 1] || '';
+  let activeMonthMoves = yearMoves.filter(m => m.date.startsWith(activeYm));
+
+  let selInc = activeMonthMoves.filter(x => x.type === 'Ingreso').reduce((s,x) => s + x.amount, 0);
+  let selExp = activeMonthMoves.filter(x => x.type === 'Egreso').reduce((s,x) => s + x.amount, 0);
+  let selFun = showLeonelYr ? activeMonthMoves.filter(x => x.type === 'Fondo Leonel').reduce((s,x) => s + x.amount, 0) : 0;
+
+  $('selectedMonthTitle').textContent = `Resumen de ${monthNameActive} ${selectedCalendarYear}`;
+  $('selectedMonthSub').textContent = showLeonelYr
+    ? `${activeMonthMoves.length} movimientos · Ingresos: ${fmt(selInc)} · Egresos: ${fmt(selExp)} · L.C. Leonel (+): ${fmt(selFun)}`
+    : `${activeMonthMoves.length} movimientos · Ingresos: ${fmt(selInc)} · Egresos: ${fmt(selExp)}`;
+
+  let maxM = Math.max(selInc, selExp, selFun, 1);
+  $('selectedMonthChartMini').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:3px;font-size:11px">
+      <div style="display:flex;align-items:center;gap:6px"><span style="width:55px;color:var(--green);font-weight:700">Ingreso</span><div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px"><div style="width:${selInc>0?Math.max(4,(selInc/maxM)*100):0}%;background:#16a34a;height:100%"></div></div></div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="width:55px;color:var(--red);font-weight:700">Egreso</span><div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px"><div style="width:${selExp>0?Math.max(4,(selExp/maxM)*100):0}%;background:#dc2626;height:100%"></div></div></div>
+      ${showLeonelYr ? `<div style="display:flex;align-items:center;gap:6px"><span style="width:55px;color:var(--teal);font-weight:700">Leonel+</span><div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px"><div style="width:${selFun>0?Math.max(4,(selFun/maxM)*100):0}%;background:#0d9488;height:100%"></div></div></div>` : ''}
+    </div>`;
+}
+
+window.selectCalendarMonth = function(mCode){
+  selectedCalendarMonth = mCode;
+  renderYearlyView();
+};
+
+window.deleteMovement = function(id){
+  if(confirm('¿Eliminar este movimiento?')){
+    moves = moves.filter(m=>m.id!==id);
+    persist();
+    showToast('Movimiento eliminado');
+  }
+};
+
+window.editMovement = function(id){
+  let m = moves.find(x => x.id === id);
+  if(!m) return;
+  $('mEditId').value = m.id;
+  $('movementModalTitle').textContent = 'Editar movimiento';
+  $('mDate').value = m.date;
+  $('mClient').value = m.clientId;
+  syncLeonelOptionVisibility(m.clientId);
+  $('mType').value = m.type;
+  $('mCategory').value = m.category || 'Otros';
+  $('mAmount').value = m.amount;
+  $('mPayment').value = m.payment || 'Transferencia';
+  $('mDescription').value = m.description || '';
+  show('movementModal');
+};
+
+$('mClient').onchange = (e)=> syncLeonelOptionVisibility(e.target.value);
+
+window.deleteClient = function(clientId){
+  let client = clients.find(c=>c.id===clientId);
+  if(!client) return;
+  if(confirm(`¿Eliminar a "${client.name}" junto con sus movimientos y sub-clientes?`)){
+    clients = clients.filter(c=>c.id!==clientId);
+    moves = moves.filter(m=>m.clientId!==clientId);
+    subClients = subClients.filter(sc=>sc.ownerClientId!==clientId);
+    persist();
+    showToast('Cliente eliminado');
+  }
+};
+
+window.editClient = function(clientId){
+  let c = clients.find(x=>x.id===clientId);
+  if(!c) return;
+  $('cEditId').value = c.id;
+  $('clientModalTitle').textContent = 'Editar cliente';
+  $('cName').value = c.name;
+  $('cuit').value = formatTaxId(c.cuit);
+  $('cCategory').value = c.category || '';
+  $('cPin').value = c.pin || '1234';
+  $('cColor').value = c.color || '#142b45';
+  show('clientModal');
+};
+
+function show(id){$(id).classList.add('show')}function hide(id){$(id).classList.remove('show')}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>hide(b.dataset.close));
+
+$('clientForm').onsubmit=e=>{
+  e.preventDefault();
+  let editId = $('cEditId').value;
+  let cuit = normalizeTaxId($('cuit').value);
+  if(cuit.length !== 11){
+    if(!confirm('El CUIT/CUIL no tiene 11 dígitos. ¿Deseás guardarlo igual?')) return;
+  }
+  if(!editId && clients.some(c=>normalizeTaxId(c.cuit)===cuit)){
+    alert('Ese CUIT/CUIL ya está cargado.');
+    return;
+  }
+  let payload = {
+    name: $('cName').value.trim(),
+    cuit,
+    category: $('cCategory').value,
+    pin: $('cPin').value.trim() || '1234',
+    color: $('cColor').value || '#142b45'
+  };
+  if(editId){
+    let idx = clients.findIndex(c=>c.id===editId);
+    if(idx !== -1) clients[idx] = { ...clients[idx], ...payload };
+    showToast('Cliente actualizado');
+  } else {
+    clients.push({ id: String(Date.now()), ...payload });
+    showToast('Cliente guardado');
+  }
+  e.target.reset();
+  $('cEditId').value = '';
+  hide('clientModal');
+  persist();
+};
+
+function newMove(){
+  if(!clients.length){ showToast('Cargá un cliente primero'); tab('clients'); return; }
+  $('mEditId').value = '';
+  $('movementModalTitle').textContent = 'Nuevo movimiento';
+  $('movementForm').reset();
+  $('mDate').value = new Date().toISOString().slice(0,10);
+  syncLeonelOptionVisibility($('mClient').value);
+  show('movementModal');
+}
+$('newMovement').onclick=newMove;
+
+$('movementForm').onsubmit=e=>{
+  e.preventDefault();
+  let editId = $('mEditId').value;
+  let targetCid = $('mClient').value;
+  let targetClient = clients.find(c => c.id === targetCid);
+  let chosenType = $('mType').value;
+  if(chosenType === 'Fondo Leonel' && !isOrianaClient(targetClient)){
+    chosenType = 'Egreso';
+  }
+  let payload = {
+    date: $('mDate').value,
+    clientId: targetCid,
+    type: chosenType,
+    category: $('mCategory').value,
+    amount: Number($('mAmount').value),
+    payment: $('mPayment').value,
+    description: $('mDescription').value
+  };
+  if(editId){
+    let idx = moves.findIndex(m=>m.id===editId);
+    if(idx !== -1) moves[idx] = { ...moves[idx], ...payload };
+    showToast('Movimiento actualizado');
+  } else {
+    moves.push({ id: String(Date.now()), ...payload, source: 'Manual' });
+    showToast('Movimiento guardado');
+  }
+  e.target.reset();
+  $('mEditId').value = '';
+  hide('movementModal');
+  persist();
+};
+
+['dashClient','dashMonth','dashType'].forEach(id=>$(id).onchange=render);
+$('dashSearch').oninput=render;
+$('clearFilters').onclick=()=>{
+  $('dashMonth').value='';
+  $('dashType').value='';
+  $('dashSearch').value='';
+  if(currentRole==='admin') $('dashClient').value='';
+  render();
+};
+
+['movesClientFilter','movesMonthFilter','movesTypeFilter'].forEach(id=>$(id).onchange=renderMovementsTab);
+$('movesSearchFilter').oninput=renderMovementsTab;
+$('clearMovesFilters').onclick=()=>{
+  $('movesMonthFilter').value='';
+  $('movesTypeFilter').value='';
+  $('movesSearchFilter').value='';
+  if(currentRole==='admin') $('movesClientFilter').value='';
+  renderMovementsTab();
+};
+
+function exportMovesRows(list, filename){
+  let h=['Fecha','Cliente','CUIT','Tipo','Categoría','Descripción','Importe','Origen'];
+  let d=list.map(m=>{let c=clients.find(c=>c.id===m.clientId)||{};return [m.date,c.name,formatTaxId(c.cuit),m.type,m.category,m.description,m.amount,m.source]});
+  let csv=[h,...d].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  let a=document.createElement('a'),u=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+  a.href=u;a.download=filename;a.click();URL.revokeObjectURL(u);
+  showToast('CSV exportado');
+}
+
+$('export').onclick=()=>exportMovesRows(filtered(), 'ContabilidadEnCasa_General.csv');
+$('exportMovesCsvBtn').onclick=()=>exportMovesRows(filteredMovementsTab(), 'ContabilidadEnCasa_Movimientos.csv');
+
+$('backupJsonBtn').onclick = ()=>{
+  let backupObj = {
+    version: 'V25.5',
+    exportedAt: new Date().toISOString(),
+    clients,
+    moves,
+    taxes,
+    subClients
+  };
+  let blob = new Blob([JSON.stringify(backupObj, null, 2)], { type: 'application/json' });
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Respaldo_ContabilidadEnCasa_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('Respaldo (.json) descargado');
+};
+
+$('restoreJsonBtn').onclick = ()=> $('restoreJsonInput').click();
+$('restoreJsonInput').onchange = async (e)=>{
+  let f = e.target.files && e.target.files[0];
+  if(!f) return;
+  try {
+    let txt = await f.text();
+    let parsed = JSON.parse(txt);
+    if(!parsed || !Array.isArray(parsed.clients) || !Array.isArray(parsed.moves)){
+      alert('El archivo de respaldo no tiene el formato esperado.');
+      return;
+    }
+    if(confirm('¿Restaurar los datos de este respaldo? Se reemplazarán los registros actuales por los del archivo.')){
+      clients = parsed.clients;
+      moves = parsed.moves;
+      taxes = Array.isArray(parsed.taxes) ? parsed.taxes : [];
+      subClients = Array.isArray(parsed.subClients) ? parsed.subClients : [];
+      sanitizeMovesForOriana();
+      persist();
+      showToast('Respaldo restaurado con éxito');
+    }
+  } catch(err){
+    alert('Error al leer el archivo de respaldo: ' + err.message);
+  }
+  e.target.value = '';
+};
+
+window.openClientReport = function(clientId){
+  activeReportClientId = clientId;
+  let client = clients.find(c=>c.id===clientId);
+  if(!client) return;
+  let subCount = subClients.filter(sc=>sc.ownerClientId===clientId).length;
+  $('reportTitle').textContent = `Informe: ${client.name}`;
+  $('reportSubtitle').textContent = `CUIT/CUIL: ${formatTaxId(client.cuit)} · Cat.: ${client.category||'-'} · Sub-clientes: ${subCount}`;
+  let cm = moves.filter(m=>isMoveVisibleInClientScope(m, clientId));
+  let months = [...new Set(cm.map(m=>m.date.slice(0,7)))].sort().reverse();
+  if(!months.length) months = [new Date().toISOString().slice(0,7)];
+  $('reportMonthFilter').innerHTML = `<option value="">Todos los meses (${cm.length})</option>` + months.map(m=>`<option value="${m}">Período: ${m}</option>`).join('');
+  $('reportMonthFilter').onchange = updateClientReportModal;
+  updateClientReportModal();
+  show('reportModal');
+};
+
+function updateClientReportModal(){
+  if(!activeReportClientId) return;
+  let client = clients.find(c=>c.id===activeReportClientId);
+  let allowLeonelRep = isOrianaClient(client);
+  $('repLeonelCard').style.display = allowLeonelRep ? 'block' : 'none';
+
+  let month = $('reportMonthFilter').value;
+  let cm = moves.filter(m=>isMoveVisibleInClientScope(m, activeReportClientId) && (!month || m.date.startsWith(month)));
+  let i = cm.filter(x=>x.type==='Ingreso').reduce((s,x)=>s+x.amount,0);
+  let o = cm.filter(x=>x.type==='Egreso').reduce((s,x)=>s+x.amount,0);
+  let f = allowLeonelRep ? cm.filter(x=>x.type==='Fondo Leonel').reduce((s,x)=>s+x.amount,0) : 0;
+  let b = i + f - o;
+  $('repIncome').textContent = fmt(i);
+  $('repExpense').textContent = fmt(o);
+  $('repLeonel').textContent = fmt(f);
+  $('repBalance').textContent = fmt(b);
+  $('repBalance').className = b>=0?'pos':'neg';
+}
+
+$('exportStandaloneHTML').onclick = ()=>{
+  let client = clients.find(c=>c.id===activeReportClientId);
+  let allowLeonelRep = isOrianaClient(client);
+  let month = $('reportMonthFilter').value || 'Todos_los_meses';
+  let cm = moves.filter(m=>isMoveVisibleInClientScope(m, activeReportClientId) && (!$('reportMonthFilter').value || m.date.startsWith($('reportMonthFilter').value)));
+  let i = cm.filter(x=>x.type==='Ingreso').reduce((s,x)=>s+x.amount,0);
+  let o = cm.filter(x=>x.type==='Egreso').reduce((s,x)=>s+x.amount,0);
+  let f = allowLeonelRep ? cm.filter(x=>x.type==='Fondo Leonel').reduce((s,x)=>s+x.amount,0) : 0;
+  let b = i + f - o;
+  let accent = client.color || '#142b45';
+  let standaloneCode = `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Informe - ${esc(client.name)}</title><style>:root{--navy:${esc(accent)};--bg:#f3f6fa;--muted:#64748b;--line:#e2e8f0;--green:#15803d;--red:#b91c1c;--teal:#0d9488}*{box-sizing:border-box}body{margin:0;font:15px/1.45 system-ui,sans-serif;background:var(--bg);color:#172033}header{background:var(--navy);color:white;padding:18px;display:flex;justify-content:space-between;align-items:center}main{max-width:1000px;margin:20px auto;padding:0 15px}.panel,.metric{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(${allowLeonelRep?4:3},1fr);gap:10px;margin:15px 0}.metric small{color:var(--muted)}.metric strong{display:block;font-size:22px;margin-top:4px}.pos{color:var(--green)}.neg{color:var(--red)}.fund{color:var(--teal)}table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line)}</style></head><body><header><div><div style="font-size:20px;font-weight:800">Contabilidad en casa</div><div style="font-size:12px;color:#e2e8f0">Informe · ${new Date().toLocaleDateString('es-AR')}</div></div><span>${esc(month)}</span></header><main><h2>${esc(client.name)}</h2><div class="grid"><div class="metric"><small>Ingresos</small><strong class="pos">${fmt(i)}</strong></div><div class="metric"><small>Egresos</small><strong class="neg">${fmt(o)}</strong></div>${allowLeonelRep?`<div class="metric"><small>L.C. Leonel (+)</small><strong class="fund">${fmt(f)}</strong></div>`:''}<div class="metric"><small>Balance</small><strong class="${b>=0?'pos':'neg'}">${fmt(b)}</strong></div></div><div class="panel"><h3>Movimientos</h3><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Importe</th></tr></thead><tbody>${cm.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.type)}</td><td>${esc(x.category)}</td><td>${esc(x.description)}</td><td>${fmt(x.amount)}</td></tr>`).join('')||'<tr><td colspan="5">Sin movimientos.</td></tr>'}</tbody></table></div></main></body></html>`;
+  let blob = new Blob([standaloneCode], {type:'text/html;charset=utf-8'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Informe_${client.name.replace(/\s+/g,'_')}_${month}.html`;
+  a.click();
+  showToast('HTML del cliente exportado');
+};
+
+$('exportClientReport').onclick = ()=>{
+  let client = clients.find(c=>c.id===activeReportClientId);
+  let month = $('reportMonthFilter').value || 'Todos';
+  let cm = moves.filter(m=>isMoveVisibleInClientScope(m, activeReportClientId) && (!$('reportMonthFilter').value || m.date.startsWith($('reportMonthFilter').value)));
+  exportMovesRows(cm, `Informe_${client.name.replace(/\s+/g,'_')}_${month}.csv`);
+};
+
+const dropZone = $('dropZone'), fileInput = $('scanFile');
+dropZone.onclick = ()=> fileInput.click();
+dropZone.ondragover = (e)=>{ e.preventDefault(); dropZone.classList.add('dragover'); };
+dropZone.ondragleave = (e)=>{ e.preventDefault(); dropZone.classList.remove('dragover'); };
+dropZone.ondrop = (e)=>{ e.preventDefault(); dropZone.classList.remove('dragover'); if(e.dataTransfer.files && e.dataTransfer.files.length > 0) handleFilesSelected(e.dataTransfer.files); };
+fileInput.onchange = ()=>{ if(fileInput.files && fileInput.files.length > 0) handleFilesSelected(fileInput.files); };
+
+function parseSheetMonthNumber(sheetName, baseYear){
+  let s = String(sheetName || '').toLowerCase().trim();
+  let yearMatch = s.match(/(20\d{2})/);
+  let year = yearMatch ? yearMatch[1] : String(baseYear || new Date().getFullYear());
+  let mMatch = s.match(/mes\s*0?([1-9]|1[0-2])\b/);
+  if(mMatch) return { year, month: mMatch[1].padStart(2, '0') };
+  let numMatch = s.match(/^0?([1-9]|1[0-2])$/);
+  if(numMatch) return { year, month: numMatch[1].padStart(2, '0') };
+  return { year, month: '01' };
+}
+
+function extractDateFromCell(dateCellVal, sheetMonthInfo){
+  if(dateCellVal === null || dateCellVal === undefined || dateCellVal === '') return null;
+  let year = sheetMonthInfo.year, month = sheetMonthInfo.month;
+  if(typeof dateCellVal === 'number'){
+    if(dateCellVal > 25000 && dateCellVal < 65000){
+      let utcDays = Math.floor(dateCellVal - 25569);
+      let d = new Date(utcDays * 86400 * 1000);
+      if(!isNaN(d.getTime())) return d.toISOString().slice(0,10);
+    } else if(dateCellVal >= 1 && dateCellVal <= 31){
+      return `${year}-${month}-${String(Math.floor(dateCellVal)).padStart(2, '0')}`;
+    }
+  } else {
+    let str = String(dateCellVal).trim();
+    let isoMatch = str.match(/\b(20\d{2})[\/.-](0?[1-9]|1[0-2])[\/.-](0?[1-9]|[12]\d|3[01])\b/);
+    if(isoMatch) return `${isoMatch[1]}-${isoMatch[2].padStart(2,'0')}-${isoMatch[3].padStart(2,'0')}`;
+    let latamMatch = str.match(/\b(0?[1-9]|[12]\d|3[01])[\/.-](0?[1-9]|1[0-2])[\/.-](20\d{2})\b/);
+    if(latamMatch) return `${latamMatch[3]}-${latamMatch[2].padStart(2,'0')}-${latamMatch[1].padStart(2,'0')}`;
+    let dMatch = str.match(/^(0?[1-9]|[12]\d|3[01])$/);
+    if(dMatch) return `${year}-${month}-${dMatch[1].padStart(2, '0')}`;
+  }
+  return null;
+}
+
+function parseArgNumber(val) {
+  if (typeof val === 'number') return isNaN(val) ? 0 : val;
+  let clean = String(val || '').replace(/\$/g, '').replace(/ARS/ig, '').replace(/\u00a0/g, ' ').trim();
+  if (!clean) return 0;
+  if (/^\d{2}-\d{7,8}-\d$/.test(clean) || /^\d{4,5}-\d{7,8}$/.test(clean)) return 0;
+  clean = clean.replace(/[^\d,.-]/g, '');
+  if (!clean) return 0;
+  if (clean.includes(',') && clean.includes('.')) {
+    clean = clean.lastIndexOf(',') > clean.lastIndexOf('.') ? clean.replace(/\./g, '').replace(',', '.') : clean.replace(/,/g, '');
+  } else if (clean.includes(',')) {
+    let parts = clean.split(',');
+    clean = parts[parts.length - 1].length <= 2 ? clean.replace(/\./g, '').replace(',', '.') : clean.replace(/,/g, '');
+  } else if (clean.includes('.')) {
+    let parts = clean.split('.');
+    if (parts.length > 2 || (parts.length === 2 && parts[1].length === 3)) clean = clean.replace(/\./g, '');
+  }
+  let num = Number(clean);
+  return isNaN(num) ? 0 : num;
+}
+
+function analyzeAdaptiveExcelSheet(rows, sheetName, fileName, targetClientId, baseYear){
+  let incCount = 0, incSum = 0, expCount = 0, expSum = 0, funCount = 0, funSum = 0, skippedDup = 0;
+  let sheetMonthInfo = parseSheetMonthNumber(sheetName, baseYear);
+  let targetClient = clients.find(c => c.id === targetClientId);
+  let allowLeonelImport = isOrianaClient(targetClient);
+
+  let headerIdx = -1, incAmtCol = -1, incDescCol = -1, incDateCol = -1, expAmtCol = -1, expDescCol = -1, expDateCol = -1;
+  for(let i = 0; i < Math.min(rows.length, 5); i++){
+    let r = rows[i].map(c => String(c||'').toLowerCase().trim());
+    for(let c = 0; c < Math.min(r.length, 9); c++){
+      if((r[c] === 'entrada' || r[c] === 'entradas' || r[c] === 'ingreso' || r[c] === 'ingresos') && c >= 1){
+        incAmtCol = c; incDescCol = c - 1; incDateCol = c >= 2 ? c - 2 : 0; headerIdx = i;
+      }
+      if((r[c] === 'salida' || r[c] === 'salidas' || r[c] === 'egreso' || r[c] === 'egresos') && c >= 1){
+        expAmtCol = c; expDescCol = c - 1; expDateCol = c >= 2 ? c - 2 : 4; headerIdx = i;
+      }
+    }
+    if(incAmtCol !== -1 || expAmtCol !== -1) break;
+  }
+  if(incAmtCol === -1){ incDateCol = 0; incDescCol = 1; incAmtCol = 2; }
+  if(expAmtCol === -1){ expDateCol = 5; expDescCol = 6; expAmtCol = 7; }
+  let startRow = headerIdx >= 0 ? headerIdx + 1 : 0;
+  let lastIncDate = `${sheetMonthInfo.year}-${sheetMonthInfo.month}-01`, lastExpDate = `${sheetMonthInfo.year}-${sheetMonthInfo.month}-01`;
+  for(let r = startRow; r < rows.length; r++){
+    let row = rows[r]; if(!row || !row.length) continue;
+    let parsedIncDate = extractDateFromCell(row[incDateCol], sheetMonthInfo);
+    if(parsedIncDate) lastIncDate = parsedIncDate;
+    let incDesc = String(row[incDescCol] || '').trim(), amtInc = parseArgNumber(row[incAmtCol]);
+    if(amtInc > 0 && amtInc < 10000000000 && !/^(total|subtotal|ganancia|final)\b/i.test(incDesc)){
+      if(addMovementChecked({ date: lastIncDate, clientId: targetClientId, type: 'Ingreso', category: 'Ventas / facturación', amount: amtInc, description: incDesc || `Entrada (${sheetName} Fila ${r+1})`, source: `Excel [${fileName}] · ${sheetName}` })){ incCount++; incSum += amtInc; } else skippedDup++;
+    }
+    let parsedExpDate = extractDateFromCell(row[expDateCol], sheetMonthInfo);
+    if(parsedExpDate) lastExpDate = parsedExpDate;
+    let expDesc = String(row[expDescCol] || '').trim(), amtExp = parseArgNumber(row[expAmtCol]);
+    if(amtExp > 0 && amtExp < 10000000000 && !/^(total|subtotal|ganancia|final)\b/i.test(expDesc)){
+      let isLeonel = allowLeonelImport && /\b(leonel|l\.?c\.?\s*leonel)\b/i.test(expDesc);
+      let mType = isLeonel ? 'Fondo Leonel' : 'Egreso';
+      let mCat = isLeonel ? 'Fondos / L.C. Leonel' : 'Otros';
+      if(addMovementChecked({ date: lastExpDate, clientId: targetClientId, type: mType, category: mCat, amount: amtExp, description: expDesc || `Salida (${sheetName} Fila ${r+1})`, source: `Excel [${fileName}] · ${sheetName}` })){
+        if(isLeonel){ funCount++; funSum += amtExp; } else { expCount++; expSum += amtExp; }
+      } else skippedDup++;
+    }
+  }
+  return { incCount, incSum, expCount, expSum, funCount, funSum, skippedDup };
+}
+
+function addMovementChecked(newMov){
+  let sig = `${newMov.date}_${newMov.clientId}_${newMov.type}_${newMov.amount}_${newMov.description.toLowerCase().trim()}`;
+  let exists = moves.some(m => `${m.date}_${m.clientId}_${m.type}_${m.amount}_${m.description.toLowerCase().trim()}` === sig);
+  if(!exists){ moves.push({ id: String(Date.now() + Math.random()), ...newMov }); return true; }
+  return false;
+}
+
+async function handleFilesSelected(files){
+  if(!clients.length){ showToast('Creá un cliente primero'); tab('clients'); return; }
+  let targetClientId = $('scanClient').value || clients[0].id;
+  let defaultPdfType = $('scanDefaultType').value || 'Ingreso';
+  let baseYear = $('scanBaseYear').value || new Date().getFullYear();
+  $('ocrStatus').textContent = 'Procesando archivos...';
+  let logText = '', totalAdded = 0, totalSkipped = 0;
+  for(let file of files){
+    let ext = file.name.split('.').pop().toLowerCase(), fileAdded = 0, fileSkipped = 0;
+    if(['xlsx', 'xls', 'csv'].includes(ext)){
+      try {
+        let data = await file.arrayBuffer(), workbook = XLSX.read(data, {type: 'array', cellFormula: true, cellNF: true, cellDates: false}), sheetLog = '';
+        workbook.SheetNames.forEach(sheetName => {
+          let worksheet = workbook.Sheets[sheetName]; if(!worksheet || !worksheet['!ref']) return;
+          let range = XLSX.utils.decode_range(worksheet['!ref']), rows = [];
+          for(let R = range.s.r; R <= range.e.r; ++R){
+            let rowArr = [], hasData = false;
+            for(let C = range.s.c; C <= range.e.c; ++C){
+              let cell = worksheet[XLSX.utils.encode_cell({r:R, c:C})];
+              if(cell){ hasData = true; rowArr.push(cell.v !== undefined ? cell.v : (cell.w || '')); } else rowArr.push('');
+            }
+            if(hasData) rows.push(rowArr);
+          }
+          let res = analyzeAdaptiveExcelSheet(rows, sheetName, file.name, targetClientId, baseYear);
+          let sheetNew = res.incCount + res.expCount + res.funCount;
+          fileAdded += sheetNew; fileSkipped += res.skippedDup;
+          sheetLog += `  • ${sheetName}: ${sheetNew} nuevos (Ing: ${fmt(res.incSum)} · Egr: ${fmt(res.expSum)}${res.funSum>0?` · Leonel+: ${fmt(res.funSum)}`:''}) | ${res.skippedDup} duplicados\n`;
+        });
+        logText += `📊 ${file.name}\n${sheetLog}\n`;
+      } catch(err){ logText += `❌ Error en ${file.name}: ${err.message}\n\n`; }
+    } else {
+      try {
+        let text = await extractText(file), parsed = parseArcaDocument(text, file.name);
+        if(parsed.amount > 0){
+          let ok = addMovementChecked({ date: parsed.date, clientId: targetClientId, type: defaultPdfType, category: defaultPdfType === 'Ingreso' ? 'Ventas / facturación' : 'Otros', amount: parsed.amount, description: parsed.description, source: 'Comprobante: ' + file.name });
+          if(ok) fileAdded++; else fileSkipped++;
+          logText += `📄 ${file.name} -> ${parsed.description} | ${parsed.date} | ${fmt(parsed.amount)} (${ok ? 'Nuevo' : 'Duplicado omitido'})\n\n`;
+        } else logText += `⚠️ ${file.name}: no se detectó un importe válido.\n\n`;
+      } catch(err){ logText += `❌ Error en comprobante ${file.name}: ${err.message}\n\n`; }
+    }
+    totalAdded += fileAdded; totalSkipped += fileSkipped;
+    importHistory.push({ time: new Date().toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' }), fileName: file.name, added: fileAdded, skipped: fileSkipped });
+  }
+  persist();
+  $('ocrRaw').value = logText;
+  $('ocrStatus').textContent = `Listo: ${totalAdded} movimientos nuevos agregados · ${totalSkipped} duplicados omitidos.`;
+  showToast(`${totalAdded} nuevos · ${totalSkipped} duplicados omitidos`);
+}
+
+async function extractText(file){
+  if(file.type==='application/pdf' || file.name.toLowerCase().endsWith('.pdf')){
+    if(!window.pdfjsLib)throw Error('No PDF.js');
+    let buf = await file.arrayBuffer(), pdf = await pdfjsLib.getDocument({data:buf}).promise, fullText = '';
+    for(let p = 1; p <= Math.min(pdf.numPages, 3); p++){
+      let page = await pdf.getPage(p), content = await page.getTextContent();
+      fullText += content.items.map(it=>it.str).join(' ') + '\n';
+    }
+    return fullText;
+  }
+  let res = await Tesseract.recognize(file, 'spa');
+  return res.data.text;
+}
+
+function parseArcaDocument(text){
+  let flat = text.replace(/\s+/g, ' ');
+  let docTypeMatch = flat.match(/\b(Factura|Nota\s+de\s+Cr[ée]dito|Recibo)\s*([ABCEM])?\b/i);
+  let docType = docTypeMatch ? (docTypeMatch[1] + (docTypeMatch[2] ? ' ' + docTypeMatch[2].toUpperCase() : '')) : 'Comprobante';
+  let numMatch = flat.match(/\b(\d{4,5})\s*-\s*(\d{8})\b/);
+  let compNumber = numMatch ? `${numMatch[1]}-${numMatch[2]}` : '';
+  let date = new Date().toISOString().slice(0,10);
+  let emisionMatch = flat.match(/Fecha\s+de\s+Emisi[óo]n\s*[:\s]*(\d{2})[\/.-](\d{2})[\/.-](20\d{2})/i) || flat.match(/\b(0?[1-9]|[12]\d|3[01])[\/.-](0?[1-9]|1[0-2])[\/.-](20\d{2})\b/);
+  if(emisionMatch) date = `${emisionMatch[3]}-${emisionMatch[2].padStart(2,'0')}-${emisionMatch[1].padStart(2,'0')}`;
+
+  let totalLabeledMatch = flat.match(/(?:Importe\s+Total|Total\s+a\s+Pagar|Total)\s*[:$]?\s*(\d{1,3}(?:\.\d{3})*,\d{2})/i);
+  let amount = 0;
+  if(totalLabeledMatch){
+    amount = parseArgNumber(totalLabeledMatch[1]);
+  } else {
+    let allMoney = [...flat.matchAll(/\$?\s*(\d{1,3}(?:\.\d{3})*,\d{2})\b/g)].map(m => parseArgNumber(m[1])).filter(n => n > 1 && n < 10000000000);
+    amount = allMoney.length > 0 ? allMoney[allMoney.length - 1] : 0;
+  }
+  return { date, amount, description: `${docType} ${compNumber}`.trim() };
+}
+
+updateSessionView();
+</script>
+</body>
+</html>
